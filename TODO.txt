@@ -1,0 +1,23 @@
+==volem muntar horaris d'un festival
+=== hem de decidir quins músics tocaran cadascuna de les meces musicals tenint en compte els instruments q domina
+
+
+
+
+
+es volen interpretar un conjunt de peces musicals amb una orquestra de cambra
+
+
+de cada peça musical tenim
+* instruments necessaris (quins, i quantitat) 
+* durada (multiples de 5)
+
+mes dades
+* cada music domina un conjunt d'instruments
+* espais ilimitats
+* nombre de musics limitats
+* els musics poden cobrar diferent. Per cada music sabem
+    - sou per cada 5 minuts tocats
+* hi ha limit de diners a gastar
+* es pot demanar que hi hagi relació de precedència entre peces.(mirar enunciat per mes detalls)
+* comença a les 10, volem tardar el minim possible.
