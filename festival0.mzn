@@ -1,4 +1,4 @@
-include "count_fn.mzn";
+include "count.mzn";
 include "disjunctive_opt.mzn";
 %1: matriu[peces, musics] of int sales, matriu[peces] of int minuts// falta algo per controlar quin instrument toca?
 %%%%%% sales es de 1..nPeces i els minuts es 0..sumaDuracioMusiques
@@ -31,9 +31,9 @@ set of int: MaxMinuts = 0..maxMinuts;
 %model
 
 %he canviat per instruments, perque no ens importen les sales. No nhem de saber res. En canvi hem de controlar insturments, cosa q no feiem en el viewpoint anterior.
-array[Peces, Musics] of var Instruments: instrumentsXmusics; %0 significa que no en toca cap. Per tant, no toca en aquesta peça
-%tot i ser redundant potser és interessant ficar una array de Musics x Instruments, q ens digui si en algun moment el music toca linsturment. domini bool
+array[Peces, Musics] of var 0..nInstruments: instrumentsXmusics; %0 significa que no en toca cap. Per tant, no toca en aquesta peça
 array[Peces] of var MaxMinuts: minutInici;
+array[Musics] of var MaxMinuts: minutsTocatsXmusic;
 array[Peces] of var MaxMinuts: quanAcaba; %variable auxiliar per a saber quan acaba cada Peça
 
 
@@ -54,7 +54,6 @@ constraint forall(p in Peces, i in Instruments)(
     count([instrumentsXmusics[p,m]|m in Musics], i, requereix[p,i])
 );
 
-%%%%% AQUI DONA UNSAT 
 
 %4 constraint per a que un music només toqui un cop a la vegada
 %%%%%%% cal mirar que les peces q es solapen no tinguin musics comuns.
@@ -65,12 +64,20 @@ constraint forall (p in Peces, m in Musics where instrumentsXmusics[p,m] != 0 )(
     )
 );
 
-
 %5 constraint per a estar dins del pressupost
 %%%%%%% mirar quants minuts toquen, multiplicar pel salari de cada music. Comprovar q el resultat no és mes gran q el pressupost.
+constraint forall(m in Musics)(
+    minutsTocatsXmusic[m] = sum(p in Peces where instrumentsXmusics[p,m]!=0)(durada[p])
+);
+constraint pressupost >= sum(m in Musics)((minutsTocatsXmusic[m]/5)*salari[m]);
 
 %6 constraint per a complir les precedencies requerides
-%%%% quan comença el successor el precesedor ha de haver acabat.
+%%%% quan comença el successor el precesedor ha de haber acabat.
+
+constraint forall(pr in Precs)(
+    minutInici[pred[pr]] + durada[pred[pr]] > minutInici[succ[pr]]
+);
+
 
 
 constraint forall(p in Peces)(
@@ -80,3 +87,4 @@ constraint forall(p in Peces)(
 
 
 solve minimize max(quanAcaba);
+% solve satisfy;
