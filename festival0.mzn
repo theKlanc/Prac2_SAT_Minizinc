@@ -48,34 +48,42 @@ constraint forall( p in Peces, m in Musics)(
 %3 constraint per tal que tots els insturments necessaris siguin tocats
 constraint forall(p in Peces, i in Instruments)(
     count([instrumentsXmusics[p,m]|m in Musics], i, requereix[p,i])
-);
+) :: domain;
 
 %4 constraint per a que un music només toqui un cop a la vegada
 %%%%%%% cal mirar que les peces q es solapen no tinguin musics comuns.
 constraint forall (p in Peces, m in Musics where instrumentsXmusics[p,m] != 0 )(
-    forall (p2 in Peces where p2>p /\ instrumentsXmusics[p2,m] != 0 )(
-        ( ( (minutInici[p]*5+durada[p]) <= minutInici[p2]*5) \/ ((minutInici[p2]*5 + durada[p2]) <= minutInici[p]*5) )
-)) :: bounds;
+    forall (p2 in p+1..nPeces where instrumentsXmusics[p2,m] != 0 )(
+        ( ( (minutInici[p]*5+durada[p]) <= minutInici[p2]*5) \/ ((minutInici[p2]*5 + durada[p2]) <= minutInici[p]*5) ) 
+        /\ ( ( (minutInici[p2]*5) > minutInici[p]*5) \/ ((minutInici[p2]*5) < minutInici[p]*5) ) 
+)) :: domain;
 
 %5 constraint per a estar dins del pressupost
 %%%%%%% mirar quants minuts toquen, multiplicar pel salari de cada music. Comprovar q el resultat no és mes gran q el pressupost.
 constraint forall(m in Musics)(
     minutsTocatsXmusic[m] = sum(p in Peces where instrumentsXmusics[p,m]!=0)(durada[p]) :: defines_var(minutsTocatsXmusic[m])
-) :: bounds;
+);
 % constraint pressupost >= sum(m in Musics)((minutsTocatsXmusic[m] div 5)*salari[m]);
-constraint int_lin_le(salari,minutsTocatsXmusic, pressupost*5) :: bounds;
+constraint int_lin_le(salari,minutsTocatsXmusic, pressupost*5) :: domain;
 
 %6 constraint per a complir les precedencies requerides
 %%%% quan comença el successor el precesedor ha de haber acabat.
 constraint forall(pr in Precs)(
     minutInici[pred[pr]]*5 + durada[pred[pr]] <= minutInici[succ[pr]]*5
-) :: bounds ;
+) :: domain ;
 
 constraint forall(p in Peces)(
     quanAcaba[p] = minutInici[p]*5 + durada[p] :: defines_var(quanAcaba[p])
-) :: bounds;
+);
 
-solve :: int_search(minutInici, anti_first_fail, indomain, complete) minimize max(quanAcaba);
+%IMPLICADES
+
+constraint max(quanAcaba) >= max(durada) :: domain;
+constraint min(quanAcaba) >= min(durada) :: domain;
+
+solve :: int_search(quanAcaba, most_constrained, indomain_split, complete) minimize max(quanAcaba);
+% solve :: int_search(minutInici, most_constrained, indomain_split, complete) minimize max(quanAcaba);
 % solve satisfy;
 
 output ["final = \(10 + max(quanAcaba) div 60) : \(max(quanAcaba) mod 60)\nminutInici = \(minutInici) \n"]
+
