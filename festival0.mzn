@@ -77,5 +77,5 @@ constraint forall(p in Peces)(
     quanAcaba[p] = minutInici[p] + durada[p] :: defines_var(quanAcaba[p])
 );
 
-solve :: int_search(minutInici, most_constrained, indomain, complete) minimize max(quanAcaba);
+solve :: int_search(minutInici, first_fail, indomain, complete) minimize max(quanAcaba);
 % solve satisfy;
