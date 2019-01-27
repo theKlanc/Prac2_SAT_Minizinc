@@ -1,2 +1,2 @@
-constraint max(quanAcaba) >= max(durada) :: domain;
-constraint min(quanAcaba) >= min(durada) :: domain;
+constraint max(quanAcaba) >= max(durada) :: bounds;
+constraint min(quanAcaba) >= min(durada) :: bounds;

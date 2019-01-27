@@ -166,14 +166,12 @@ No cal definir-la, posat que ve donada pel viewpoint, que només permet un instr
 \subsubsection*{Restricció per evitar que un músic toqui instruments que no domina}
 
 Consisteix en mirar per cada peça \textit{p} i músic \textit{m}, el instrument que toca \textit{m} en la peça \textit{p} sigui 0, o el domini (\texttt{saptocar[m, instrument]} és \texttt{true}).
-
 ~\\
 \lstinputlisting[language=minizinc]{mzn_constraint1.mzn}
 
 \subsubsection*{Restricció per a que es toquin els instruments que es requereixen en cada peça}
 
 Per cada peça, contem quants instruments de cada es toquen, i mirem que sigui igual amb el que requereix la peça.
-
 ~\\
 \lstinputlisting[language=minizinc]{mzn_constraint2.mzn}
 
@@ -197,7 +195,6 @@ Primer cal donar valor a la variable \texttt{minutsTocatsXmusic}. Amb aixó usem
 \subsubsection*{Restricció de precedències}
 
 Aquesta restricció és tan senzilla com mirar que cada precedència acabi abans de que comenci la peça que ha de precedir.
-
 ~\\
 \lstinputlisting[language=minizinc]{mzn_constraint5.mzn}
 
@@ -213,16 +210,59 @@ Com a restriccions implicades, hem forçat una mica els límits de durada.
 Fent que la peça que acaba abans, acabi en un minut més gran o igual a la duració de la peça més curta, 
 i que la peça que acabi més tard, acabi en un minut més gran o igual que la peça més llarga.
 
-L'intenció és reduir una mica l'espai de cerca, en zones on no hi ha solucions.
-
-~\\
+L'intenció és reduir una mica l'espai de cerca, en zones on no hi ha solucions. \\
 \lstinputlisting[language=minizinc]{mzn_constraint_implicades.mzn}
 
+\subsection{Resolució}
+
+Volem minimitzar la durada del festival, així que necessitem minimitzar el element màxim de la variable \texttt{quanAcaba}, que representa la hora en que acaba la última peça que es toca, per tant quan acaba el festival en sí. \\
+\lstinputlisting[language=minizinc]{mzn_solve.mzn}
+
+\section{Proves Fetes}
+
+\subsection{Solvers}
+
+S'han provat els següents solvers, amb els següents resultats\footnote{En temps raonable}:
+
+\begin{itemize}
+    \item Gecode: Es penja amb totes les instàncies excepte la 0.
+    \item Chuffed: Generalment Resol totes les instàncies fins a la 6 (inclosa).
+    \item OSICBC: Generalment Resol totes les instàncies fins a la 5 (inclosa). Pero molt més lenta
+\end{itemize}
+
+La resta de solvers o no funcionaven amb el nostre model (Gecode Gist, FindMus) o requerien de components externs (Gurobi i CPLEX)
+
+Per tant les proves es faran usant chuffed i oscibc. 
+
+\subsection{Anotacions de cerca}
+
+Les anotacions usades són les vistes anteriorment. Al fer la cerca, s'han fet les següents proves\footnote{Proves fetes en un Ryzen 3 1200 @3.55GHz utilitzant 4 fils de treball sempre que ha estat possible. Juntament amb 8Gb de RAM}:
+
+Notar que quan es diu Penjat, es vol dir que el programa després de 20 minuts, encara no ha acabat. 
+
+\subsubsection*{Cap anotació}
 
 
+\begin{tabular}{|c|c|c|}
+    \hline
+    Instàncies & Chuffed & OSICBC \\
+    \hline
+    1 &  0.28s & 13.541s\\
+    2 &  0.28s & 6.178s\\
+    3 &  2.3s & 4min 45s\\
+    4 &  1s & 5.34s\\
+    5 &  0.22s & 6.27s\\
+    6 &  Penjat & Penjat\\
+    9 &  45.61s & Penjat\\
+
+    \hline
+    
+\end{tabular}
 
 
 \chapter{ScalAT}
+
+
 
 \end{document}
 
