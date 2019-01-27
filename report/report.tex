@@ -1,0 +1,96 @@
+\documentclass[11pt,a4paper,twoside]{report}
+  \usepackage{a4wide}
+  \usepackage{epsfig}
+  \usepackage{amsmath}
+  \usepackage{tabu}
+  \usepackage{amsfonts}
+  \usepackage{latexsym}
+  \usepackage[utf8]{inputenc}
+  \usepackage{listings}
+  \usepackage{color}
+  \usepackage{titlesec}    
+  \usepackage{enumitem}
+  \usepackage[catalan]{babel}
+  \usepackage{newunicodechar}
+  \usepackage{graphicx}
+  \usepackage{subcaption}
+  \usepackage{float}
+  \usepackage{verbatim}
+  \usepackage{booktabs}
+  \usepackage[table,xcdraw]{xcolor}
+
+\setcounter{tocdepth}{4}
+\setcounter{secnumdepth}{4}
+
+\newunicodechar{Ŀ}{\L.}
+\newunicodechar{ŀ}{\l.}
+
+
+% \titleformat{\chapter}
+%   {\normalfont\LARGE\bfseries}{\thechapter}{1em}{}
+% \titlespacing*{\chapter}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=false, %set true if you want colored links
+  linktoc=all,     %set to all if you want both sections and subsections linked
+  linkcolor=blue,  %choose some color if you want links to stand out
+}
+
+\lstset{frame=tb,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3,
+  extendedchars=true,
+  literate={á}{{\'a}}1 {à}{{\`a}}1 {ã}{{\~a}}1 {é}{{\'e}}1 {è}{{\`e}}1 {í}{{\'i}}1 {ï}{{\"i}}1 {ó}{{\'o}}1 {ò}{{\`o}}1 {ú}{{\'u}}1 {ü}{{\"u}}1 {ç}{{\c{c}}}1
+        {Á}{{\'A}}1 {À}{{\`A}}1 {Ã}{{\~A}}1 {É}{{\'E}}1 {È}{{\`E}}1 {Í}{{\'I}}1 {Ï}{{\"I}}1 {Ó}{{\'O}}1 {Ò}{{\`O}}1 {Ú}{{\'U}}1 {Ü}{{\"U}}1 {Ç}{{\c{C}}}1
+  }
+
+\setlength{\footskip}{50pt}
+\setlength{\parindent}{0cm} \setlength{\oddsidemargin}{-0.5cm} \setlength{\evensidemargin}{-0.5cm}
+\setlength{\textwidth}{17cm} \setlength{\textheight}{23cm} \setlength{\topmargin}{-1.5cm} \addtolength{\parskip}{2ex}
+\setlength{\headsep}{1.5cm}
+
+
+\renewcommand{\contentsname}{Continguts}
+%\renewcommand{\chaptername}{Pr\`actica}
+\setcounter{chapter}{0}
+
+
+
+\begin{document}
+
+\title{Pràctica Programació amb Restriccions \\
+\large Festival de Música de Cambra + ScalAT }
+\author{Ismael El Habri, Lluís Trilla}
+\date{28 de gener de 2019}
+\maketitle
+
+\tableofcontents
+
+\chapter{Minizinc: Festival de música de cambra }
+
+\section{Model}
+
+\subsection{Variables}
+
+
+
+\chapter{ScalAT}
+
+\end{document}
+
