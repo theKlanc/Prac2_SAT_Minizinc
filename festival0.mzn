@@ -1,8 +1,5 @@
 include "count.mzn";
 include "disjunctive_opt.mzn";
-%1: matriu[peces, musics] of int sales, matriu[peces] of int minuts// falta algo per controlar quin instrument toca?
-%%%%%% sales es de 1..nPeces i els minuts es 0..sumaDuracioMusiques
-%%%%%% necessitarem una variable amb la duració final, que es el que hem de minimitzar
 
 int: nPeces;
 int: nMusics;
@@ -26,21 +23,17 @@ array[Precs] of int: succ;
 int: maxMinuts = sum(durada) div 5;
 set of int: MaxMinuts = 0..maxMinuts;
 
-%model
+%VARIABLES
 
-%he canviat per instruments, perque no ens importen les sales. No nhem de saber res. En canvi hem de controlar insturments, cosa q no feiem en el viewpoint anterior.
 array[Peces, Musics] of var 0..nInstruments: instrumentsXmusics; %0 significa que no en toca cap. Per tant, no toca en aquesta peça
 array[Peces] of var MaxMinuts: minutInici;
-array[Musics] of var 0..sum(durada): minutsTocatsXmusic :: is_defined_var;
+array[Musics] of var 0..sum(durada): minutsTocatsXmusic :: is_defined_var; %variable auxiliar per a saber quants minuts toca cada Músic
 array[Peces] of var 0..sum(durada): quanAcaba :: is_defined_var; %variable auxiliar per a saber quan acaba cada Peça
-
-%%q sha de fer?
 
 
 %1 constraint per fer q un music no toqui més de 1 instrument a la vegada |||||||-->  NO CAL, ÉS IMPLICITA AL VIEW POINT. Per cada Peça un music nomes pot tocar un instrument!!!
 
 %2 constraint per a que un music només toqui elements que sap tocar
-%%%%%%% cal mirar per cada per cada Peça que cada music sapiga tocar el que li diuen que toqui.
 constraint forall( p in Peces, m in Musics)(
     saptocar[m, instrumentsXmusics[p,m]] \/ (instrumentsXmusics[p,m] == 0)
 );
@@ -51,7 +44,6 @@ constraint forall(p in Peces, i in Instruments)(
 ) :: domain;
 
 %4 constraint per a que un music només toqui un cop a la vegada
-%%%%%%% cal mirar que les peces q es solapen no tinguin musics comuns.
 constraint forall (p in Peces, m in Musics where instrumentsXmusics[p,m] != 0 )(
     forall (p2 in p+1..nPeces where instrumentsXmusics[p2,m] != 0 )(
         ( ( (minutInici[p]*5+durada[p]) <= minutInici[p2]*5) \/ ((minutInici[p2]*5 + durada[p2]) <= minutInici[p]*5) ) 
@@ -59,15 +51,12 @@ constraint forall (p in Peces, m in Musics where instrumentsXmusics[p,m] != 0 )(
 )) :: domain;
 
 %5 constraint per a estar dins del pressupost
-%%%%%%% mirar quants minuts toquen, multiplicar pel salari de cada music. Comprovar q el resultat no és mes gran q el pressupost.
 constraint forall(m in Musics)(
     minutsTocatsXmusic[m] = sum(p in Peces where instrumentsXmusics[p,m]!=0)(durada[p]) :: defines_var(minutsTocatsXmusic[m])
 );
-% constraint pressupost >= sum(m in Musics)((minutsTocatsXmusic[m] div 5)*salari[m]);
 constraint int_lin_le(salari,minutsTocatsXmusic, pressupost*5) :: domain;
 
 %6 constraint per a complir les precedencies requerides
-%%%% quan comença el successor el precesedor ha de haber acabat.
 constraint forall(pr in Precs)(
     minutInici[pred[pr]]*5 + durada[pred[pr]] <= minutInici[succ[pr]]*5
 ) :: domain ;

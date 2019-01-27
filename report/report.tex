@@ -58,7 +58,58 @@
   extendedchars=true,
   literate={á}{{\'a}}1 {à}{{\`a}}1 {ã}{{\~a}}1 {é}{{\'e}}1 {è}{{\`e}}1 {í}{{\'i}}1 {ï}{{\"i}}1 {ó}{{\'o}}1 {ò}{{\`o}}1 {ú}{{\'u}}1 {ü}{{\"u}}1 {ç}{{\c{c}}}1
         {Á}{{\'A}}1 {À}{{\`A}}1 {Ã}{{\~A}}1 {É}{{\'E}}1 {È}{{\`E}}1 {Í}{{\'I}}1 {Ï}{{\"I}}1 {Ó}{{\'O}}1 {Ò}{{\`O}}1 {Ú}{{\'U}}1 {Ü}{{\"U}}1 {Ç}{{\c{C}}}1
-  }
+}
+
+\lstdefinelanguage{minizinc}{
+    morekeywords={
+        %% MiniZinc keywords
+        %%
+        ann, annotation, any, array, assert,
+        bool,
+        constraint,
+        else, elseif, endif, enum, exists,
+        float, forall, function,
+        if, in, include, int,
+        list,
+        minimize, maximize,
+        of, op, output,
+        par, predicate,
+        record,
+        set, solve, string,
+        test, then, tuple, type,
+        var,
+        where,
+        %% MiniZinc functions
+        %%
+        abort, abs, acosh, array_intersect, array_union,
+        array1d, array2d, array3d, array4d, array5d, array6d, asin, assert, atan,
+        bool2int,
+        card, ceil, combinator, concat, cos, cosh,
+        dom, dom_array, dom_size, dominance,
+        exp,
+        fix, floor,
+        index_set, index_set_1of2, index_set_2of2, index_set_1of3, index_set_2of3, index_set_3of3,
+        int2float, is_fixed,
+        join,
+        lb, lb_array, length, let, ln, log, log2, log10,
+        min, max,
+        pow, product,
+        round,
+        set2array, show, show_int, show_float, sin, sinh, sqrt, sum,
+        tan, tanh, trace,
+        ub, and ub_array,
+        %% Search keywords
+        %%
+        bool_search, int_search, seq_search, priority_search,
+        %% MiniSearch keywords
+        %%
+        minisearch, search, while, repeat, next, commit, print, post, sol, scope, time_limit, break, fail
+    },
+    sensitive=true, % are the keywords case sensitive
+    morecomment=[l][\em\color{ForestGreen}]{\%},
+    %morecomment=[s]{/*}{*/},
+    morestring=[b]",
+}
 
 \setlength{\footskip}{50pt}
 \setlength{\parindent}{0cm} \setlength{\oddsidemargin}{-0.5cm} \setlength{\evensidemargin}{-0.5cm}
@@ -86,7 +137,88 @@
 
 \section{Model}
 
-\subsection{Variables}
+\subsection{Dades}
+Apart de les dades donades, hem definit \texttt{maxMinuts}, que consisteix en la durada màxima que pot tenir el festival, sent aquesta donada per la suma de durades de totes les peces, pel cas en que totes les peces es toquin una darrere l'altre.
+Aquesta dada s'usarà per definir el domini de variables posteriors. Per tal de reduir-lo, sabent que les durades son de multiples de 5, decidim dividir-la entre 5 (fent que les peces comencin en minuts múltiples de 5).
+\\~\\
+\lstinputlisting[language=minizinc]{mzn_dades.mzn}
+
+\subsection{Variables i dominis}
+
+Hem definit les següents variables:
+
+\begin{itemize}
+    \item \texttt{instrumentsXMusics}: Taula que ens indica per cada peça i músic, quin instrument toca aquest músic en aquesta peça, si és 0, indica que aquest músic no toca en aquesta peça. Per tant el domini és de 0 a \texttt{nInstruments}.
+    \item \texttt{minutInici}: Array que ens indica el minut en que comença cada peça. El temps, com ja s'ha dit, està dividit entre 5 (per reduir l'espai de cerca). EL domini és de 0 a maxMinuts.
+    \item \texttt{minutsTocatsXmusic}: Variable auxiliar que ens diu els minuts tocats per cada músic. Domini de 0..durada màxima del event.
+    \item \texttt{quanAcaba}: Variable auxiliar que ens diu quan acaba cada peça. Domini igual a la anterior.
+\end{itemize}
+
+\lstinputlisting[language=minizinc]{mzn_variables.mzn}
+
+\subsection{Restriccions}
+
+
+\subsubsection*{Restricció per tal de que cada músic no toqui més d'un instrument en la mateixa peça}
+
+No cal definir-la, posat que ve donada pel viewpoint, que només permet un instrument per músic i peça.
+
+\subsubsection*{Restricció per evitar que un músic toqui instruments que no domina}
+
+Consisteix en mirar per cada peça \textit{p} i músic \textit{m}, el instrument que toca \textit{m} en la peça \textit{p} sigui 0, o el domini (\texttt{saptocar[m, instrument]} és \texttt{true}).
+
+~\\
+\lstinputlisting[language=minizinc]{mzn_constraint1.mzn}
+
+\subsubsection*{Restricció per a que es toquin els instruments que es requereixen en cada peça}
+
+Per cada peça, contem quants instruments de cada es toquen, i mirem que sigui igual amb el que requereix la peça.
+
+~\\
+\lstinputlisting[language=minizinc]{mzn_constraint2.mzn}
+
+
+\subsubsection*{Restricció per evitar que les peces que es solapin usin els mateixos músics}
+Per cada músic i dos peces, mirem que si el músic toca en les dos peces, una de les dos comenci abans que acabi l'altre.
+~\\
+\lstinputlisting[language=minizinc]{mzn_constraint3.mzn}
+
+
+\subsubsection*{Restricció per mantenir-nos dins del pressupost}
+
+Primer cal donar valor a la variable \texttt{minutsTocatsXmusic}. Amb aixó usem la funció builtin de FlatZinc 
+\texttt{int\_lin\_le(array int of int: as, array int of var int: bs, int: c)} que aplica la restricció següent:
+\[
+    \sum as[i] * bs[i] \leq c
+\]
+~\\
+\lstinputlisting[language=minizinc]{mzn_constraint4.mzn}
+
+\subsubsection*{Restricció de precedències}
+
+Aquesta restricció és tan senzilla com mirar que cada precedència acabi abans de que comenci la peça que ha de precedir.
+
+~\\
+\lstinputlisting[language=minizinc]{mzn_constraint5.mzn}
+
+
+\subsubsection*{Restricció per donar valor a \texttt{quanAcaba}}
+Sumem la durada al minut d'inici, multiplicat per 5. Els temps de \texttt{quanAcaba} són relatius al inici (minut 0), però en temps real (no en funció de 5).
+~\\
+\lstinputlisting[language=minizinc]{mzn_constraint5.mzn}
+
+
+\subsubsection*{Restriccions implicades}
+Com a restriccions implicades, hem forçat una mica els límits de durada. 
+Fent que la peça que acaba abans, acabi en un minut més gran o igual a la duració de la peça més curta, 
+i que la peça que acabi més tard, acabi en un minut més gran o igual que la peça més llarga.
+
+L'intenció és reduir una mica l'espai de cerca, en zones on no hi ha solucions.
+
+~\\
+\lstinputlisting[language=minizinc]{mzn_constraint_implicades.mzn}
+
+
 
 
 
