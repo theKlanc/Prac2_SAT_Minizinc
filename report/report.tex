@@ -426,6 +426,38 @@ Amb anotacions podem fer la instància 6 a costa de augmentar el temps d'execuci
 
 \chapter{ScalAT}
 
+\section{Exercici 2}
+
+\subsection{Pregunta 1}
+\begin{enumerate}
+\item \textbf{Quines diferències observeu entre les tres configuracions pel que fa a la mida?}
+
+La configuració 1 és la més petita, mentre que la tres, és la més gran.
+
+Resultats amb 8 reines:
+
+\small{\verbatiminput{sat_results_reines_1.txt}}
+
+\item \textbf{Quina de les tres configuracions és ràpida? Per què creieu que passa?}
+
+La configuració més ràpida és la 2. Pel que fa la diferència amb la primera, és evidentment el passar de constraints quadràtiques a constraints logarítmiques, fent que tinguem moltes menys clàusules.
+La configuració 3, la restricció implicada ens afegeix moltes clàusules i moltes variables. Aixó fa que carregui molt en memoria, fent-la molt més lenta.
+
+Resultats amb 120 reines:
+
+\small{\verbatiminput{sat_results_reines_2.txt}}
+
+
+\item \textbf{ Quina de les tres configuracions és més ràpida? Per què creieu que passa? Fins a quin nombre de reines sou capaços de sol·lucionar amb la millor de les configuracions.}
+
+Hem pogut resoldre fins a 724 en menys d'un minut (Incloent Montatge i resolució). Aquí els resultats\footnote{Totes les proves d'aquest apartat s'han fet amb un Ryzen 3 1200 @3.55GHz amb 8GB de ram, dedicant-ne 4GB al \texttt{sbt} per tal de no quedar-nos sense memòria. La unitat de emmagatzematge (i també on hi ha la unitat de swap) és un SSD Samsung 970 Evo}:
+
+\small{\verbatiminput{sat_results_reines_3.txt}}
+
+
+
+\end{enumerate}
+
 
 
 \end{document}

@@ -187,22 +187,15 @@ class ScalAT {
     val variables = for (i <- 1 to n) yield newVar()
     var i = 0
     x.foreach { elem =>
-      val binari = i.toBinaryString
+      var binari = i.toBinaryString
+      binari = ("0"*(n-binari.length)).concat(binari)
       var j =0
-      variables.foreach{variable =>
-        if(j<binari.length){
-          var variableKai:Int = if(binari.charAt(j) == '0') -variable else variable
-          addClause(-elem :: variableKai :: List() )
-        }
-        else {
-          addClause(-elem :: -variable :: List())
-        }
-        j=j+1
+      for(j <- 0 until n){
+        val variable = if(binari.charAt(j) == '0') -variables(j) else variables(j)
+        addClause(-elem :: variable :: List())
       }
       i=i+1
-
     }
-    //addAMOQuad(x)
   }
 
   //Adds the encoding of the at-least-one.
