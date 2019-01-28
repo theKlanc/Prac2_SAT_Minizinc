@@ -1,6 +1,6 @@
 object Sudoku {
   def main(args: Array[String]){
-    var e = new ScalAT;
+    var e = new ScalAT
     e.setWorkingPath("./")
     e.setSolverPath("src/main/scala/")
 

@@ -1,8 +1,8 @@
 object TestSorter {
   def main(args: Array[String]){
-    var e = new ScalAT;
-    e.setWorkingPath("/home/klanc/Projects/Uni/4t/ProgDec/Prac2_SAT_Minizinc/")
-    e.setSolverPath("/home/klanc/Projects/Uni/4t/ProgDec/Prac2_SAT_Minizinc/src/main/scala/")
+    var e = new ScalAT
+    e.setWorkingPath("./")
+    e.setSolverPath("src/main/scala/")
 
 
     //Comprovem el funcionament d'un sorter
