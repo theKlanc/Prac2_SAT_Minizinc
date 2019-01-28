@@ -1,0 +1,26 @@
+Conf1:
+    Solving time: 1.781999945640564 seconds
+    N vars: 14400
+    N clauses: 2851480
+    N decisions: 14516
+    N propagations: 79872
+    N conflicts: 297
+    [success] Total time: 11 s, completed Jan 28, 2019 7:51:45 PM
+    
+Conf2:
+    Solving time: 0.8429999947547913 seconds
+    N vars: 18918
+    N clauses: 392264
+    N decisions: 21592
+    N propagations: 334411
+    N conflicts: 773
+    [success] Total time: 6 s, completed Jan 28, 2019 7:52:52 PM
+
+Conf3:
+    Solving time: 34.29499816894531 seconds
+    N vars: 1540644
+    N clauses: 4963395
+    N decisions: 44428
+    N propagations: 45871621
+    N conflicts: 891
+    [success] Total time: 89 s, completed Jan 28, 2019 7:48:18 PM

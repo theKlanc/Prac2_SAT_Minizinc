@@ -1,0 +1,20 @@
+Conf1
+N vars: 64
+N clauses: 744
+N decisions: 35
+N propagations: 331
+N conflicts: 20
+
+Conf2
+N vars: 174
+N clauses: 728
+N decisions: 82
+N propagations: 2031
+N conflicts: 55
+
+Conf3
+N vars: 1260
+N clauses: 3987
+N decisions: 88
+N propagations: 4456
+N conflicts: 14

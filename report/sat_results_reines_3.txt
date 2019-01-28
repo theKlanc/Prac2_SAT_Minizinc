@@ -1,0 +1,7 @@
+Solving time: 28.125 seconds
+N vars: 563504
+N clauses: 20267392
+N decisions: 592731
+N propagations: 4342724
+N conflicts: 774
+[success] Total time: 59 s, completed Jan 28, 2019 7:41:58 PM
