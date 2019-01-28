@@ -232,33 +232,197 @@ S'han provat els següents solvers, amb els següents resultats\footnote{En temp
 
 La resta de solvers o no funcionaven amb el nostre model (Gecode Gist, FindMus) o requerien de components externs (Gurobi i CPLEX)
 
-Per tant les proves es faran usant chuffed i oscibc. 
+Per tant les proves es faran usant Chuffed, Posat que el OSCIBC és molt més lent, i el Gecode es penja amb molta facilitat. 
 
 \subsection{Anotacions de cerca}
 
-Les anotacions usades són les vistes anteriorment. Al fer la cerca, s'han fet les següents proves\footnote{Proves fetes en un Ryzen 3 1200 @3.55GHz utilitzant 4 fils de treball sempre que ha estat possible. Juntament amb 8Gb de RAM}:
+Al fer la cerca, s'han fet les següents proves\footnote{Proves fetes en un Ryzen 3 1200 @3.55GHz juntament amb 8Gb de RAM}:
 
 Notar que quan es diu Penjat, es vol dir que el programa després de 20 minuts, encara no ha acabat. 
 
-\subsubsection*{Cap anotació}
 
+\subsubsection{Cap anotació}
 
 \begin{tabular}{|c|c|c|}
     \hline
-    Instàncies & Chuffed & OSICBC \\
+    Instàncies & Chuffed \\
     \hline
-    1 &  0.28s & 13.541s\\
-    2 &  0.28s & 6.178s\\
-    3 &  2.3s & 4min 45s\\
-    4 &  1s & 5.34s\\
-    5 &  0.22s & 6.27s\\
-    6 &  Penjat & Penjat\\
-    9 &  45.61s & Penjat\\
+    1 &  0.28s \\
+    2 &  0.28s \\
+    3 &  2.3s \\
+    4 &  1s \\
+    5 &  0.22s \\
+    6 &  Penjat \\
+    7 &  Penjat \\
+    8 &  Penjat \\
+    9 &  45.61s \\
+    10 & Penjat  \\
 
     \hline
-    
 \end{tabular}
 
+\subsubsection{varchoiceannotation}
+
+
+\paragraph*{int\_search(minutInici, first\_fail, indomain, complete)}~\\
+
+\begin{tabular}{|c|c|}
+    \hline
+    Instàncies & Chuffed \\
+    \hline
+    1 & 0.27s \\
+    2 & 0.24s \\
+    3 & 1.7s  \\
+    4 & 16s \\
+    5 & 0.25s \\
+    6 & 11s  \\
+    7 & Penjat  \\
+    8 & Penjat  \\
+    9 & Penjat  \\
+    10&Penjat  \\
+
+    \hline
+\end{tabular}
+
+\paragraph*{int\_search(minutInici, anti\_first\_fail, indomain, complete)}~\\
+
+\begin{tabular}{|c|c|}
+    \hline
+    Instàncies & Chuffed \\
+    \hline
+    1 & 0.27s \\
+    2 & 0.23s \\
+    3 & 3.32s  \\
+    4 & 1min24s \\
+    5 & 0.25s  \\
+    6 & 11.22s  \\
+    7 & Penjat   \\
+    8 & Penjat   \\
+    9 & 5.137s \\
+    10 & Penjat   \\
+    \hline
+\end{tabular}
+
+\paragraph*{int\_search(minutInici, most\_constrained, indomain, complete)} ~\\
+
+\begin{tabular}{|c|c|}
+    \hline
+    Instàncies & Chuffed \\
+    \hline
+    1 &  0.27s  \\
+    2 &  0.25s  \\
+    3 &  1.68s  \\
+    4 &  16.34s \\
+    5 &  0.31s \\
+    6 &  11.78s \\
+    7 &  Penjat  \\
+    8 &  Penjat  \\
+    9 &  Penjat \\
+    10 & Penjat  \\
+    \hline
+\end{tabular}
+
+
+
+\paragraph*{Conclusió sobre varchoiceannotation} ~\\
+Ens quedem amb \texttt{anti\_first\_fail}, posat que és la que resol més instàncies. La part negativa és que el 4 és considerablement més lent.
+
+\subsubsection{assignmentannotation}
+
+\paragraph*{int\_search(minutInici, anti\_first\_fail, indomain, complete)} ~\\
+Aquest cas ja l'hem vist amb anterioritat \\
+\begin{tabular}{|c|c|}
+    \hline
+    Instàncies & Chuffed \\
+    \hline
+    1 & 0.27s \\
+    2 & 0.23s \\
+    3 & 3.32s  \\
+    4 & 1min24s \\
+    5 & 0.25s  \\
+    6 & 11.22s  \\
+    7 & Penjat   \\
+    8 & Penjat   \\
+    9 & 5.137s \\
+    10 & Penjat   \\
+    \hline
+\end{tabular}
+
+
+\paragraph*{int\_search(minutInici, anti\_first\_fail, indomain\_min, complete)} ~\\
+
+\begin{tabular}{|c|c|}
+    \hline
+    Instàncies & Chuffed \\
+    \hline
+    1 & 0.24s \\
+    2 & 0.25s \\
+    3 & 3.3s  \\
+    4 & 1min23s \\
+    5 & 0.25s  \\
+    6 & 11.33s  \\
+    7 & Penjat   \\
+    8 & Penjat   \\
+    9 & 5.28s \\
+    10 & Penjat   \\
+    \hline
+\end{tabular}
+
+
+\paragraph*{int\_search(minutInici, anti\_first\_fail, indomain\_split, complete)}~\\
+
+\begin{tabular}{|c|c|}
+    \hline
+    Instàncies & Chuffed \\
+    \hline
+    1 & 0.25s \\
+    2 & 0.25s \\
+    3 & 2.96s  \\
+    4 & 1min46s \\
+    5 & 0.25s  \\
+    6 & 8.17s  \\
+    7 & Penjat   \\
+    8 & Penjat   \\
+    9 & 1min22s \\
+    10 & Penjat   \\
+    \hline
+\end{tabular}
+
+\paragraph*{int\_search(minutInici, anti\_first\_fail, indomain\_median, complete)}~\\
+
+\begin{tabular}{|c|c|}
+    \hline
+    Instàncies & Chuffed \\
+    \hline
+    1 & 0.26s  \\
+    2 & 0.25s  \\
+    3 & 3.7s   \\
+    4 & 28.04s  \\
+    5 & 0.25s   \\
+    6 & 6.74s   \\
+    7 & Penjat   \\
+    8 & Penjat   \\
+    9 & 6min39s  \\
+    10 & Penjat   \\
+    \hline
+\end{tabular}
+
+
+\paragraph*{Conclusió sobre assignmentannotation} ~\\
+
+Hem decidit usar una de les 3 primeres, que donen temps molt semblants en general (Les diferencies podrien ser considerades dintre del marge d'error).
+Així al final ens quedem amb \texttt{indomain}.
+
+
+\subsubsection{Conclusió sobre les anotacions de resolució}
+
+Generalment el nostre model es bastant ràpid, excepte la instància 4 i la 9. El cas més ràpid, és quan no li donem anotacions, que tenim que la 4 és quasi instància, mentre que la 9 es fa amb 45 segons. La resta d'instàncies es resolen més o menys en el mateix temps.
+Però no és capaç de resoldre la instància 6 en un temps prou veloç.
+
+Amb anotacions podem fer la instància 6 a costa de augmentar el temps d'execució de la instància 4 (però reduint el temps de resolució de la instància).
+
+
+\paragraph*{Anotacions finals:} \texttt{int\_search(minutInici, anti\_first\_fail, indomain, complete)}
 
 \chapter{ScalAT}
 

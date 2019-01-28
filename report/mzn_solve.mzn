@@ -1,1 +1,1 @@
-solve :: int_search(quanAcaba, most_constrained, indomain_split, complete) minimize max(quanAcaba);
+solve :: int_search(minutInici, anti_first_fail, indomain, complete) minimize max(quanAcaba);

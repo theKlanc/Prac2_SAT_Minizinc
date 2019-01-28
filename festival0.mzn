@@ -71,7 +71,8 @@ constraint forall(p in Peces)(
 constraint max(quanAcaba) >= max(durada) :: bounds;
 constraint min(quanAcaba) >= min(durada) :: bounds;
 
-solve minimize max(quanAcaba);
+% solve minimize max(quanAcaba);
+solve :: int_search(minutInici, anti_first_fail, indomain, complete) minimize max(quanAcaba);
 % solve :: int_search(minutInici, most_constrained, indomain_split, complete) minimize max(quanAcaba);
 % solve satisfy;
 output ["Hora d’inici del festival: ",show(min(minutInici)*5 div 60+10),"h ",show(min(minutInici)*5 mod 60),"min",
