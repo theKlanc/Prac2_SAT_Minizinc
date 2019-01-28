@@ -1,8 +1,8 @@
 object Sudoku {
   def main(args: Array[String]){
     var e = new ScalAT;
-    e.setWorkingPath("/Users/jordicoll/IdeaProjects/ScalAT/")
-    e.setSolverPath("/Users/jordicoll/Desktop/")
+    e.setWorkingPath("./")
+    e.setSolverPath("src/main/scala/")
 
     //graella(i)(j)(k) es cert sii a la casella (i)(j) hi ha el valor k
     //Agafem valors de 0 a 8 enlloc de 1 a 9
@@ -18,7 +18,7 @@ object Sudoku {
       for (i <- 0 to 8) {
         l ::= graella(i)(j)(k)
       }
-      e.addAMOQuad(l)
+      e.addAMOLog(l)
     }
 
     //A la fila 'i' hi ha com a molt un 'k'
@@ -27,7 +27,7 @@ object Sudoku {
       for (j <- 0 to 8) {
         l ::= graella(i)(j)(k)
       }
-      e.addAMOQuad(l)
+      e.addAMOLog(l)
     }
 
     //Al cuadrat (i,j) hi ha com a molt un 'k'
@@ -36,7 +36,7 @@ object Sudoku {
       for(i2 <- List(0,1,2); j2<-List(0,1,2)){
         l::=graella(i+i2)(j+j2)(k)
       }
-      e.addAMOQuad(l)
+      e.addAMOLog(l)
     }
 
 

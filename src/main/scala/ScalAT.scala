@@ -183,7 +183,26 @@ class ScalAT {
 
   //Adds the logarithmic encoding of the at-most-one
   def addAMOLog(x:List[Int]): Unit ={
-    addAMOQuad(x)
+    val n:Int = math.ceil(log10(x.length)/log10(2)).toInt
+    val variables = for (i <- 1 to n) yield newVar()
+    var i = 0
+    x.foreach { elem =>
+      val binari = i.toBinaryString
+      var j =0
+      variables.foreach{variable =>
+        if(j<binari.length){
+          var variableKai:Int = if(binari.charAt(j) == '0') -variable else variable
+          addClause(-elem :: variableKai :: List() )
+        }
+        else {
+          addClause(-elem :: -variable :: List())
+        }
+        j=j+1
+      }
+      i=i+1
+
+    }
+    //addAMOQuad(x)
   }
 
   //Adds the encoding of the at-least-one.
@@ -251,7 +270,7 @@ class ScalAT {
   }
 
   //Adds the encoding of "merge the decreasingly sorted lists x and xp into y"
-  //x and xp must be of equal lenght and nonempty. y must have twice the lenght of x
+  //x and xp must be of equal length and nonempty. y must have twice the length of x
   //The lists contain literals
   //All variables must have been created with one of the newVar methods.
   def addMerge(x:List[Int],xp:List[Int],y:List[Int]) {
@@ -285,29 +304,29 @@ class ScalAT {
   //Adds the encoding of an exactly-K constraint.
   // x can be empty, and K take any value from -infinity to infinity
   def addEK(x:List[Int],K:Int) {
-    val sortedList = newVarArray(x.length).toList
+    var sortedList = newVarArray(x.length).toList
     addSorter(x,sortedList)
-    addClause(x(K-1) :: -x(K) :: List())
+    addClause(sortedList(K-1) :: -sortedList(K) :: List())
   }
 
   //Adds the encoding of an at-least-K constraint.
   // x can be empty, and K take any value from -infinity to infinity
   def addALK(x:List[Int],K:Int) {
-    val sortedList = newVarArray(x.length).toList
+    var sortedList = newVarArray(x.length).toList
     addSorter(x,sortedList)
-    addClause(x(K-1) :: List())
+    addClause(sortedList(K-1) :: List())
   }
 
   //Adds the encoding of an at-most-K constraint.
   // x can be empty, and K take any value from -infinity to infinity
   def addAMK(x:List[Int],K:Int) {
-    val sortedList = newVarArray(x.length).toList
+    var sortedList = newVarArray(x.length).toList
     addSorter(x,sortedList)
-    addClause(-x(K) :: List())
+    addClause(-sortedList(K) :: List())
   }
 
 
-  //Returns true iff x is power of 2. Non-negative integer required
+  //Returns true if x is power of 2. Non-negative integer required
   def isPowerOfTwo(x: Int): Boolean = {
     var n = x
     if (n == 0) return false
