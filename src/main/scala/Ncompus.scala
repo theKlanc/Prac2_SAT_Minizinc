@@ -101,11 +101,11 @@ object Ncompus {
     conSat2(6)(5)=true
     conSat2(6)(6)=true
 
-    val M         = M2
-    val N         = N2
-    val R         = R2
-    val U         = U2
-    val con =  conSat2
+    val M         = M1
+    val N         = N1
+    val R         = R1
+    val U         = U1
+    val con =  conSat1
 
 
     ///graella(i)(j) es true si i esta a la xarxa j
@@ -130,7 +130,7 @@ object Ncompus {
     for(con1 <- 0 until N){
       for(con2 <- 0 until N){
         if(con(con1)(con2)){
-          for(m1<-0 until Math.pow(M,2).toInt){
+          for(m1<-0 until Math.pow(2,M).toInt){
             var k: List[Int] = List()
             var m3: Int = m1
             for(m2<-0 until M){
